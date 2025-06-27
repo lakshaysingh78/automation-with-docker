@@ -2,25 +2,26 @@ pipeline {
     agent { label 'server-1' }
 
     environment {
-        SONAR_TOKEN = credentials('sonarqube-token') // This pulls the token from Jenkins credentials
+        SONAR_TOKEN = credentials('sonarqube-token') // Jenkins credentials
     }
 
     stages {
 
         stage('📦 Clone Repository') {
             steps {
-                echo 'Cloning GitHub repository...'
+                echo '📥 Cloning GitHub repository...'
+                // Git checkout auto ho raha hai SCM se
             }
         }
 
         stage('🔍 SonarQube Code Scan') {
             steps {
-                echo 'Running SonarQube analysis...'
+                echo '🔍 Running SonarQube analysis...'
                 sh '''
                     /opt/sonar-scanner/bin/sonar-scanner \
                     -Dsonar.projectKey=automation-with-docker \
                     -Dsonar.sources=. \
-                    -Dsonar.host.url=http://13.126.197.203:9000 \
+                    -Dsonar.host.url=https://c43e-2409-40d2-10b9-9e79-9f30-d6bb-f797-20f7.ngrok-free.app \
                     -Dsonar.login=$SONAR_TOKEN
                 '''
             }
@@ -28,7 +29,7 @@ pipeline {
 
         stage('🧼 Clean Up Old Containers') {
             steps {
-                echo 'Removing old Docker containers (if any)...'
+                echo '🧹 Removing old Docker containers (if any)...'
                 sh 'sudo docker compose down || true'
                 sh 'sudo docker system prune -f || true'
             }
@@ -36,21 +37,21 @@ pipeline {
 
         stage('🔧 Build & 🚀 Deploy Application') {
             steps {
-                echo 'Installing dependencies, building Docker images and deploying containers...'
+                echo '🔧 Installing dependencies & 🚀 Deploying app...'
                 sh 'sudo docker compose up --build -d'
             }
         }
 
         stage('🌐 Application URL') {
             steps {
-                echo '🚀 Application deployed at: http://13.126.197.203:8000'
+                echo '✅ App deployed at: http://13.126.197.203:8000'
             }
         }
     }
 
     post {
         failure {
-            echo '❌ Deployment failed. Please check logs.'
+            echo '❌ Deployment failed. Please check Jenkins logs for details.'
         }
     }
 }
