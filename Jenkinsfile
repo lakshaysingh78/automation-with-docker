@@ -1,11 +1,28 @@
 pipeline {
     agent { label 'server-1' }
 
+    environment {
+        SONAR_TOKEN = credentials('sonarqube-token') // This pulls the token from Jenkins credentials
+    }
+
     stages {
 
         stage('📦 Clone Repository') {
             steps {
-                echo 'Cloning GitHub repository..'
+                echo 'Cloning GitHub repository...'
+            }
+        }
+
+        stage('🔍 SonarQube Code Scan') {
+            steps {
+                echo 'Running SonarQube analysis...'
+                sh '''
+                    /opt/sonar-scanner/bin/sonar-scanner \
+                    -Dsonar.projectKey=automation-with-docker \
+                    -Dsonar.sources=. \
+                    -Dsonar.host.url=http://13.126.197.203:9000 \
+                    -Dsonar.login=$SONAR_TOKEN
+                '''
             }
         }
 
@@ -26,7 +43,7 @@ pipeline {
 
         stage('🌐 Application URL') {
             steps {
-                echo '🚀 Application deployed at: http://13.203.206.105:8000'
+                echo '🚀 Application deployed at: http://13.126.197.203:8000'
             }
         }
     }
