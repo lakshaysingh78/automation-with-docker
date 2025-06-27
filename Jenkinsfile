@@ -20,7 +20,7 @@ pipeline {
                     /opt/sonar-scanner/bin/sonar-scanner \
                     -Dsonar.projectKey=automation-with-docker \
                     -Dsonar.sources=. \
-                    -Dsonar.host.url=http://13.126.197.203:9000 \
+                    -Dsonar.host.url=http://localhost:9000 \
                     -Dsonar.login=$SONAR_TOKEN
                 '''
             }
