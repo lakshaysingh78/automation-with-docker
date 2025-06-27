@@ -24,10 +24,12 @@ pipeline {
                             /opt/sonar-scanner/bin/sonar-scanner \
                             -Dsonar.projectKey=automation-with-docker \
                             -Dsonar.sources=. \
-                            -Dsonar.exclusions=**/tests/**,**/migrations/** \
+                            -Dsonar.exclusions=**/tests/**,**/migrations/**,**/env/** \
                             -Dsonar.host.url=https://c43e-2409-40d2-10b9-9e79-9f30-d6bb-f797-20f7.ngrok-free.app \
                             -Dsonar.login=$SONAR_TOKEN \
-                            -Dsonar.qualitygate.wait=false
+                            -Dsonar.qualitygate.wait=false \
+                            -Dsonar.sourceEncoding=UTF-8 \
+                            -Dsonar.python.version=3.10
                         '''
                     }
                 }
