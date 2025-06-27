@@ -14,28 +14,6 @@ pipeline {
             }
         }
 
-        stage('🔍 SonarQube Code Scan') {
-            steps {
-                script {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        echo '🔍 Running lightweight SonarQube analysis...'
-                        sh '''
-                            export SONAR_SCANNER_OPTS="-Xmx512m"
-                            /opt/sonar-scanner/bin/sonar-scanner \
-                            -Dsonar.projectKey=automation-with-docker \
-                            -Dsonar.sources=. \
-                            -Dsonar.exclusions=**/tests/**,**/migrations/**,**/env/** \
-                            -Dsonar.host.url=https://c43e-2409-40d2-10b9-9e79-9f30-d6bb-f797-20f7.ngrok-free.app \
-                            -Dsonar.login=$SONAR_TOKEN \
-                            -Dsonar.qualitygate.wait=false \
-                            -Dsonar.sourceEncoding=UTF-8 \
-                            -Dsonar.python.version=3.10
-                        '''
-                    }
-                }
-            }
-        }
-
         stage('🧼 Clean Up Old Containers') {
             steps {
                 echo '🧹 Removing old Docker containers (if any)...'
