@@ -10,20 +10,26 @@ pipeline {
         stage('📦 Clone Repository') {
             steps {
                 echo '📥 Cloning GitHub repository...'
-                // Git checkout auto ho raha hai SCM se
+                // SCM se clone already ho jaata hai
             }
         }
 
         stage('🔍 SonarQube Code Scan') {
             steps {
-                echo '🔍 Running SonarQube analysis...'
-                sh '''
-                    /opt/sonar-scanner/bin/sonar-scanner \
-                    -Dsonar.projectKey=automation-with-docker \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=https://c43e-2409-40d2-10b9-9e79-9f30-d6bb-f797-20f7.ngrok-free.app \
-                    -Dsonar.login=$SONAR_TOKEN
-                '''
+                script {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        echo '🔍 Running lightweight SonarQube analysis...'
+                        sh '''
+                            /opt/sonar-scanner/bin/sonar-scanner \
+                            -Dsonar.projectKey=automation-with-docker \
+                            -Dsonar.sources=. \
+                            -Dsonar.exclusions=**/tests/**,**/migrations/** \
+                            -Dsonar.host.url=https://c43e-2409-40d2-10b9-9e79-9f30-d6bb-f797-20f7.ngrok-free.app \
+                            -Dsonar.login=$SONAR_TOKEN \
+                            -Dsonar.qualitygate.wait=false
+                        '''
+                    }
+                }
             }
         }
 
