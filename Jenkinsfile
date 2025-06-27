@@ -12,7 +12,7 @@ pipeline {
                 echo '📥 Cloning GitHub repository...'
                 // SCM se clone already ho jaata hai
             }
-        }
+        }export SONAR_SCANNER_OPTS="-Xmx512m"
 
         stage('🔍 SonarQube Code Scan') {
             steps {
@@ -20,6 +20,7 @@ pipeline {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         echo '🔍 Running lightweight SonarQube analysis...'
                         sh '''
+                            export SONAR_SCANNER_OPTS="-Xmx512m" 
                             /opt/sonar-scanner/bin/sonar-scanner \
                             -Dsonar.projectKey=automation-with-docker \
                             -Dsonar.sources=. \
