@@ -5,7 +5,7 @@ pipeline {
 
         stage('📦 Clone Repository') {
             steps {
-                echo 'Cloning GitHub repository...'
+                echo 'Cloning GitHub repository..'
             }
         }
 
